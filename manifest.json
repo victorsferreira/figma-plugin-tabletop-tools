@@ -1,0 +1,7 @@
+{
+  "name": "tabletop-tools",
+  "id": "996546054674548564",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html"
+}

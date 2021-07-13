@@ -1,0 +1,103 @@
+<div>
+  <div id="roll-dice">
+    <h3>Roll dice</h3>
+    <div>
+      <strong>Amount</strong>
+      <input id="dice-amount" value="1">
+    </div>
+    <div>
+      <strong>Sides</strong>
+      <div>
+        <label for="dice-sides-4">4</label>
+        <input type="radio" name="dice-sides" id="dice-sides-4" value="4">
+      </div>
+      <div>
+        <label for="dice-sides-6">6</label>
+        <input checked type="radio" name="dice-sides" id="dice-sides-6" value="6">
+      </div>
+      <div>
+        <label for="dice-sides-8">8</label>
+        <input type="radio" name="dice-sides" id="dice-sides-8" value="8">
+      </div>
+      <div>
+        <label for="dice-sides-10">10</label>
+        <input type="radio" name="dice-sides" id="dice-sides-10" value="10">
+      </div>
+      <div>
+        <label for="dice-sides-12">12</label>
+        <input type="radio" name="dice-sides" id="dice-sides-12" value="12">
+      </div>
+      <div>
+        <label for="dice-sides-20">20</label>
+        <input type="radio" name="dice-sides" id="dice-sides-20" value="20">
+      </div>
+    </div>
+    <button id="roll">Roll dices</button>
+  </div>
+
+  <div>
+    <div>
+      <strong>Sides</strong>
+      <div>
+        <label for="hourglass-length-30">30</label>
+        <input type="radio" name="hourglass-length" id="hourglass-length-30" value="30">
+      </div>
+      <div>
+        <label for="hourglass-length-60">60</label>
+        <input checked type="radio" name="hourglass-length" id="hourglass-length-60" value="60">
+      </div>
+    </div>
+    <button id="hourglass">Set hourglass</button>
+  </div>
+
+  <div>
+    <div>
+      <strong>Reveal one</strong>
+    </div>
+    <button id="reveal">Reveal One</button>
+  </div>
+
+  <button id="cancel">Cancel</button>
+</div>
+
+<script>
+  const _window = window;
+  onmessage = (event) => {
+    if (event.data.pluginMessage === 'hourglass-stop') {
+      var to_speak = new SpeechSynthesisUtterance('Stop!');
+      to_speak.volume = 1;
+      _window.speechSynthesis.speak(to_speak);
+    }
+  }
+
+  document.getElementById('reveal').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'reveal-one' } }, '*')
+  }
+
+  document.getElementById('roll').onclick = () => {
+    const diceSides = [];
+    const diceSidesElements = document.getElementsByName('dice-sides').forEach(c => diceSides.push(c));
+    const diceAmount = document.getElementById('dice-amount');
+    const diceSide = diceSides.find(c => c.checked);
+
+    const sides = parseInt(diceSide.value);
+    const amount = parseInt(diceAmount.value);
+
+    parent.postMessage({ pluginMessage: { type: 'roll-dice', sides, amount } }, '*')
+  }
+
+  document.getElementById('hourglass').onclick = () => {
+    const hourglassLengths = [];
+    const hourglassLengthsElements = document.getElementsByName('hourglass-length').forEach(c => hourglassLengths.push(c));
+    const hourglassLength = hourglassLengths.find(c => c.checked);
+
+    const length = parseInt(hourglassLength.value);
+
+    parent.postMessage({ pluginMessage: { type: 'set-hourglass', length } }, '*')
+  }
+
+  document.getElementById('cancel').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'cancel' } }, '*')
+  }
+
+</script>
