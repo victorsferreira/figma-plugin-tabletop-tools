@@ -1,0 +1,68 @@
+<div>
+  <div class="control">
+
+    <div class="column" id="roll-dice">
+      <h3>Roll a dice</h3>
+      <div class="options">
+        <strong>Amount</strong>
+        <input type="number" min="1" max="12" id="dice-amount" value="1">
+      </div>
+      <div class="options">
+        <strong>Sides</strong>
+        <div>
+          <input type="radio" name="dice-sides" id="dice-sides-4" value="4">
+          <label for="dice-sides-4">4</label>
+        </div>
+        <div>
+          <input checked type="radio" name="dice-sides" id="dice-sides-6" value="6">
+          <label for="dice-sides-6">6</label>
+        </div>
+        <div>
+          <input type="radio" name="dice-sides" id="dice-sides-8" value="8">
+          <label for="dice-sides-8">8</label>
+        </div>
+        <div>
+          <input type="radio" name="dice-sides" id="dice-sides-10" value="10">
+          <label for="dice-sides-10">10</label>
+        </div>
+        <div>
+          <input type="radio" name="dice-sides" id="dice-sides-12" value="12">
+          <label for="dice-sides-12">12</label>
+        </div>
+        <div>
+          <input type="radio" name="dice-sides" id="dice-sides-20" value="20">
+          <label for="dice-sides-20">20</label>
+        </div>
+      </div>
+      <button id="roll">Roll dices</button>
+    </div>
+  
+    <div class="column" >
+      <h3>Set an hourglass</h3>
+      <div class="options">
+        <strong>Time</strong>
+        <div>
+          <input type="radio" name="hourglass-length" id="hourglass-length-30" value="30">
+          <label for="hourglass-length-30">30 sec</label>
+        </div>
+        <div>
+          <input checked type="radio" name="hourglass-length" id="hourglass-length-60" value="60">
+          <label for="hourglass-length-60">1 min</label>
+        </div>
+        <div>
+          <input checked type="radio" name="hourglass-length" id="hourglass-length-120" value="120">
+          <label for="hourglass-length-120">2 min</label>
+        </div>
+      </div>
+      <button id="hourglass">Set hourglass</button>
+    </div>
+  
+    <div class="column" >
+      <h3>Reveal an option</h3>
+      <div class="options">
+        <span class="description">Reveal an option from a list of elements</span>
+      </div>
+      <button id="reveal">Reveal One</button>
+    </div>
+  </div>
+</div>
