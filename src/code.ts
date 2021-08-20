@@ -20,7 +20,7 @@ const IMAGE_REF = {
 const BASE64_MARKER = ';base64,';
 let pluginElements = [];
 
-figma.showUI(__html__, {width: 640, height: 400});
+figma.showUI(__html__, { width: 640, height: 400 });
 
 function removePreviousElements() {
     pluginElements.forEach(el => {
@@ -59,6 +59,8 @@ figma.ui.onmessage = async msg => {
         setHourglass(msg.length, { surface, page });
     } else if (msg.type === 'reveal-one') {
         revealOne({ page, selection });
+    } else if (msg.type === 'shuffle') {
+        shuffle({ page, selection });
     }
 };
 
@@ -70,7 +72,7 @@ function getBase64FromDataUri(dataURI) {
 function createImage(imageName) {
     const imageRef = IMAGE_REF[imageName];
 
-    if(!imageRef) {
+    if (!imageRef) {
         throw new Error('No image match this name');
     }
 
@@ -82,12 +84,54 @@ function createImage(imageName) {
 }
 
 function selectAndZoomIn(page, nodes) {
-    if(nodes.length === 1) nodes = [nodes];
+    if (nodes.length === 1) nodes = [nodes];
     // figma.currentPage.selection = nodes;
     // figma.viewport.scrollAndZoomIntoView(nodes);
 
     page.selection = nodes;
     figma.viewport.scrollAndZoomIntoView(nodes);
+}
+
+function removeItemFromArray(array, item) {
+    return array.filter(current => current !== item);
+}
+
+function shuffle({ page, selection }) {
+    console.log(page)
+    console.log(selection)
+
+    const selected = selection[0];
+
+    const elements = (
+        selection.length === 1 && selected.type === 'GROUP'
+    ) ? selected.children : selection;
+
+    const matrix = {};
+    let possibilities = Object.keys(elements);
+
+    elements.forEach((element, i) => {
+        let index;
+        while (true) {
+            index = randomize(0, possibilities.length);
+            if (!matrix[index]) {
+                matrix[index] = {};
+                possibilities = removeItemFromArray(possibilities, index);
+                break;
+            }
+        }
+
+        // Get position and element
+        const { x, y } = elements[index];
+        matrix[index] = { x, y, element: elements[i] };
+    });
+
+    // Shuffle elements
+    Object.values(matrix).forEach((replacement: any) => {
+        const { x, y, element }= replacement;
+        
+        element.x = x;
+        element.y = y;
+    });
 }
 
 function revealOne({ page, selection }) {
@@ -123,7 +167,7 @@ function revealOne({ page, selection }) {
 
 async function setHourglass(length, { surface, page }) {
     const image = createImage('hourglass');
-    
+
     const timeText = figma.createText();
     timeText.fontSize = 50;
     timeText.characters = length.toString();
