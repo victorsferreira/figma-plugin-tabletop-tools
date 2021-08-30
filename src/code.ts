@@ -20,7 +20,7 @@ const IMAGE_REF = {
 const BASE64_MARKER = ';base64,';
 let pluginElements = [];
 
-figma.showUI(__html__, { width: 640, height: 400 });
+figma.showUI(__html__, { width: 768, height: 512 });
 
 function removePreviousElements() {
     pluginElements.forEach(el => {
@@ -61,6 +61,8 @@ figma.ui.onmessage = async msg => {
         revealOne({ page, selection });
     } else if (msg.type === 'shuffle') {
         shuffle({ page, selection });
+    } else if (msg.type === 'grid') {
+        grid(msg.width, msg.height, msg.radius, { page, selection });
     }
 };
 
@@ -96,6 +98,28 @@ function removeItemFromArray(array, item) {
     return array.filter(current => current !== item);
 }
 
+function grid(width, height, radius, { page, selection }) {
+    const r = radius;
+    const a = 2 * Math.PI / 6;
+
+    for (let y = r; y + r * Math.sin(a) < height; y += r * Math.sin(a)) {
+        for (let x = r, j = 0; x + r * (1 + Math.cos(a)) < width; x += r * (1 + Math.cos(a)), y += (-1) ** j++ * r * Math.sin(a)) {
+            drawHexagon(x, y, r, { page });
+        }
+    }
+}
+
+function drawHexagon(x, y, r, { page }) {
+    const outline = figma.createPolygon();
+    outline.resize(r * 2, r * 2);
+    outline.pointCount = 6;
+    outline.rotation = 90;
+    outline.x = x;
+    outline.y = y;
+
+    page.appendChild(outline);
+}
+
 function shuffle({ page, selection }) {
     console.log(page)
     console.log(selection)
@@ -127,8 +151,8 @@ function shuffle({ page, selection }) {
 
     // Shuffle elements
     Object.values(matrix).forEach((replacement: any) => {
-        const { x, y, element }= replacement;
-        
+        const { x, y, element } = replacement;
+
         element.x = x;
         element.y = y;
     });

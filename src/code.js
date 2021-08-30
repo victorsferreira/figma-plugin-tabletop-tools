@@ -59,6 +59,12 @@ figma.ui.onmessage = (msg) => __awaiter(this, void 0, void 0, function* () {
     else if (msg.type === 'reveal-one') {
         revealOne({ page, selection });
     }
+    else if (msg.type === 'shuffle') {
+        shuffle({ page, selection });
+    }
+    else if (msg.type === 'grid') {
+        grid({ page, selection });
+    }
 });
 function getBase64FromDataUri(dataURI) {
     const base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
@@ -82,6 +88,42 @@ function selectAndZoomIn(page, nodes) {
     // figma.viewport.scrollAndZoomIntoView(nodes);
     page.selection = nodes;
     figma.viewport.scrollAndZoomIntoView(nodes);
+}
+function removeItemFromArray(array, item) {
+    return array.filter(current => current !== item);
+}
+function grid({ page, selection }) {
+    console.log(page);
+    console.log(selection);
+    console.log('Grid');
+}
+function shuffle({ page, selection }) {
+    console.log(page);
+    console.log(selection);
+    const selected = selection[0];
+    const elements = (selection.length === 1 && selected.type === 'GROUP') ? selected.children : selection;
+    const matrix = {};
+    let possibilities = Object.keys(elements);
+    elements.forEach((element, i) => {
+        let index;
+        while (true) {
+            index = randomize(0, possibilities.length);
+            if (!matrix[index]) {
+                matrix[index] = {};
+                possibilities = removeItemFromArray(possibilities, index);
+                break;
+            }
+        }
+        // Get position and element
+        const { x, y } = elements[index];
+        matrix[index] = { x, y, element: elements[i] };
+    });
+    // Shuffle elements
+    Object.values(matrix).forEach((replacement) => {
+        const { x, y, element } = replacement;
+        element.x = x;
+        element.y = y;
+    });
 }
 function revealOne({ page, selection }) {
     const selected = selection[0];

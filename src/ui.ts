@@ -38,3 +38,14 @@ document.getElementById('hourglass').onclick = () => {
 document.getElementById('shuffle').onclick = () => {
     parent.postMessage({ pluginMessage: { type: 'shuffle' } }, '*')
 }
+
+document.getElementById('grid').onclick = () => {
+    const gridWidth = document.getElementById('grid-width');
+    const gridHeight = document.getElementById('grid-height');
+    const tileRadius = document.getElementById('grid-tile-radius');
+
+    const width = parseInt((gridWidth as any).value);
+    const height = parseInt((gridHeight as any).value);
+    const radius = parseInt((tileRadius as any).value);
+    parent.postMessage({ pluginMessage: { type: 'grid', width, height, radius } }, '*');
+}

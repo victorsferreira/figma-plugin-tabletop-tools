@@ -26,3 +26,9 @@ document.getElementById('hourglass').onclick = () => {
     const length = parseInt(hourglassLength.value);
     parent.postMessage({ pluginMessage: { type: 'set-hourglass', length } }, '*');
 };
+document.getElementById('shuffle').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'shuffle' } }, '*');
+};
+document.getElementById('grid').onclick = () => {
+    parent.postMessage({ pluginMessage: { type: 'grid' } }, '*');
+};
